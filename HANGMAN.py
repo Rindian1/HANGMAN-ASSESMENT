@@ -15,7 +15,7 @@ client = genai.Client(api_key=key) #Accesses API key
 def generate(difficulty):   #Generates a word based on difficulty level 
     history = open('Hangman Word History.csv','r').read() #Reads the history file 
 
-    sys_instruct = "Give a word based on difficulty for hangman, give A SINGULAR WORD, WITH NOTHING ELSE ATTATCHED. Xhard should be very hard to guess. DO NOT GIVE THE FOLLOWING WORDS" + history #System instructions
+    sys_instruct = "Give a word based on difficulty for hangman, give A SINGULAR WORD, WITH NOTHING ELSE ATTATCHED. Easy words MUST be 4-5 words, Medium words MUST be 6-7, Hard words MUST be 8+ , Xhard should be very hard to guess. \n DO NOT GIVE THE FOLLOWING WORDS" + history #System instructions
 
     response = client.models.generate_content(model="gemini-2.0-flash", #Accesses api model
     config=types.GenerateContentConfig(system_instruction=sys_instruct), #This is where the system instruction is inputted
@@ -103,9 +103,10 @@ def add_CSV(mode):
             fd.write(word+"\n")
 
 while True: #Main Loop
-    difficulty = initialise() #Sets up all variables for game, and collects difficulty level from user
+    difficulty = initialise() #Sets up all variables for game, and collects difficulty level from user 
     while tries > 0:   #While the player has tries left, the main loop will run
-
+        if player_score < 0: 
+            player_score = 0
         print(Fore.BLUE + "Your score: ",player_score,"\n") #Prints player score in blue
         print(Fore.GREEN + formatList(blanks),Fore.RED+ '\nUsed characters: ',used_chars,"\n")  
         #Formats the blanks list by turning it into a readable list (in green), followed by the characters already used by the player
